@@ -1,4 +1,6 @@
 from room import Room
+from player import Player
+import textwrap
 
 # Declare all the rooms
 
@@ -24,28 +26,52 @@ earlier adventurers. The only exit is to the south."""),
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['outside'].cardinal_directions["n"] = room['foyer']
+room['foyer'].cardinal_directions["s"] = room['outside']
+room['foyer'].cardinal_directions["n"] = room['overlook']
+room['foyer'].cardinal_directions["e"] = room['narrow']
+room['overlook'].cardinal_directions["s"] = room['foyer']
+room['narrow'].cardinal_directions["w"] = room['foyer']
+room['narrow'].cardinal_directions["n"] = room['treasure']
+room['treasure'].cardinal_directions["s"] = room['narrow']
 
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player1 = Player("Treasure Hunter", room['outside'])
+print(player1)
 
 # Write a loop that:
-#
 # * Prints the current room name
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
-#
+
+# for key in room:
+#     print(room[key])
+# user = input("Please choose a cardinal direction n, s, e, w or q to exit the game: ")
+
 # If the user enters a cardinal direction, attempt to move to the room there.
+
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+user_is_playing = True
+
+while user_is_playing:
+    print(player1.current_room.name)
+
+    for line in textwrap.wrap(player1.current_room.description):
+        print(line)
+    
+    player_input = input("Choose the direction you would like to go (n/s/e/w) or q to quit the game: ")
+
+    if player_input in ["n", "s", "e", "w"]:
+        player1.move(player_input)
+    else:
+        print("You exited the game. Thanks for playing!!")
+        user_is_playing = False
+
+
